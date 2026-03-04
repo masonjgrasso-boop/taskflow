@@ -1,11 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from './supabaseClient';
+import { supabase, supabaseMissing } from './supabaseClient';
 import Sidebar from './components/Sidebar';
 import TaskList from './components/TaskList';
 import TaskDetail from './components/TaskDetail';
 import NewTaskModal from './components/NewTaskModal';
 
 export default function App() {
+  if (supabaseMissing) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100dvh', fontFamily: 'system-ui' }}>
+        <div style={{ textAlign: 'center', color: '#6b7280' }}>
+          <p style={{ fontSize: 18, fontWeight: 600 }}>Connection Error</p>
+          <p style={{ fontSize: 14 }}>Supabase environment variables are not configured.</p>
+        </div>
+      </div>
+    );
+  }
+
   const [tasks, setTasks] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [showNewTaskModal, setShowNewTaskModal] = useState(false);
